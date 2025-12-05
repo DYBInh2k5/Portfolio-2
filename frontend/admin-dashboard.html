@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="dark" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Dashboard - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b2bee",
+                        "background-dark": "#101022",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 30px rgba(43, 43, 238, 0.8);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="font-display bg-background-dark">
+    <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <div class="relative min-h-screen">
+        <!-- Sidebar -->
+        <aside class="fixed left-0 top-0 h-full w-64 bg-[#191933] border-r border-white/10 z-50 hidden md:block">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="size-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary">admin_panel_settings</span>
+                    </div>
+                    <div>
+                        <h2 class="text-white font-bold">Admin Panel</h2>
+                        <p class="text-white/40 text-xs" id="admin-email"></p>
+                    </div>
+                </div>
+
+                <nav class="space-y-2">
+                    <a href="admin-dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="admin-projects.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">folder</span>
+                        <span>Dự án</span>
+                    </a>
+                    <a href="admin-skills.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">psychology</span>
+                        <span>Kỹ năng</span>
+                    </a>
+                    <a href="admin-experience.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">work</span>
+                        <span>Kinh nghiệm</span>
+                    </a>
+                    <a href="admin-blog.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">article</span>
+                        <span>Blog</span>
+                    </a>
+                    <a href="admin-about.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">person</span>
+                        <span>Về tôi</span>
+                    </a>
+                    <a href="admin-messages.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">mail</span>
+                        <span>Tin nhắn</span>
+                    </a>
+                    <a href="admin-testimonials.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">star</span>
+                        <span>Đánh giá</span>
+                    </a>
+                </nav>
+
+                <div class="absolute bottom-6 left-6 right-6">
+                    <button id="logout-btn" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="md:ml-64 p-6">
+            <!-- Header -->
+            <header class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-white text-3xl font-black mb-2">Dashboard</h1>
+                        <p class="text-white/60">Chào mừng trở lại, Admin! 👋</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="index.html" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
+                            <span class="material-symbols-outlined">open_in_new</span>
+                            <span class="hidden sm:inline">Xem trang</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card bg-[#191933] rounded-xl p-6 glow-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-primary/20 p-3 rounded-lg">
+                            <span class="material-symbols-outlined text-primary text-2xl">folder</span>
+                        </div>
+                        <span class="text-green-400 text-sm font-bold">+12%</span>
+                    </div>
+                    <h3 class="text-white/60 text-sm mb-1">Tổng Dự Án</h3>
+                    <p class="text-white text-3xl font-black">24</p>
+                </div>
+
+                <div class="stat-card bg-[#191933] rounded-xl p-6 glow-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-purple-500/20 p-3 rounded-lg">
+                            <span class="material-symbols-outlined text-purple-400 text-2xl">article</span>
+                        </div>
+                        <span class="text-green-400 text-sm font-bold">+8%</span>
+                    </div>
+                    <h3 class="text-white/60 text-sm mb-1">Bài Blog</h3>
+                    <p class="text-white text-3xl font-black">18</p>
+                </div>
+
+                <div class="stat-card bg-[#191933] rounded-xl p-6 glow-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-cyan-500/20 p-3 rounded-lg">
+                            <span class="material-symbols-outlined text-cyan-400 text-2xl">visibility</span>
+                        </div>
+                        <span class="text-green-400 text-sm font-bold">+24%</span>
+                    </div>
+                    <h3 class="text-white/60 text-sm mb-1">Lượt Xem</h3>
+                    <p class="text-white text-3xl font-black">12.5K</p>
+                </div>
+
+                <a href="admin-messages.html" class="stat-card bg-[#191933] rounded-xl p-6 glow-hover block">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-green-500/20 p-3 rounded-lg">
+                            <span class="material-symbols-outlined text-green-400 text-2xl">mail</span>
+                        </div>
+                        <span class="text-orange-400 text-sm font-bold">5 mới</span>
+                    </div>
+                    <h3 class="text-white/60 text-sm mb-1">Tin Nhắn</h3>
+                    <p class="text-white text-3xl font-black">47</p>
+                </a>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mb-8">
+                <h2 class="text-white text-xl font-bold mb-4">Thao Tác Nhanh</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="admin-projects.html" class="bg-[#191933] rounded-xl p-6 text-center hover:bg-white/5 transition-colors glow-hover block">
+                        <span class="material-symbols-outlined text-primary text-4xl mb-2">add_circle</span>
+                        <p class="text-white font-semibold">Thêm Dự Án</p>
+                    </a>
+                    <button class="bg-[#191933] rounded-xl p-6 text-center hover:bg-white/5 transition-colors glow-hover">
+                        <span class="material-symbols-outlined text-purple-400 text-4xl mb-2">edit_note</span>
+                        <p class="text-white font-semibold">Viết Blog</p>
+                    </button>
+                    <button class="bg-[#191933] rounded-xl p-6 text-center hover:bg-white/5 transition-colors glow-hover">
+                        <span class="material-symbols-outlined text-cyan-400 text-4xl mb-2">upload_file</span>
+                        <p class="text-white font-semibold">Upload File</p>
+                    </button>
+                    <button class="bg-[#191933] rounded-xl p-6 text-center hover:bg-white/5 transition-colors glow-hover">
+                        <span class="material-symbols-outlined text-green-400 text-4xl mb-2">analytics</span>
+                        <p class="text-white font-semibold">Xem Thống Kê</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Projects -->
+                <div class="bg-[#191933] rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-white text-lg font-bold">Dự Án Gần Đây</h2>
+                        <button class="text-primary hover:text-primary/80 text-sm font-semibold">Xem tất cả</button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary">web</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">E-Commerce Platform</h3>
+                                <p class="text-white/40 text-xs">Cập nhật 2 giờ trước</p>
+                            </div>
+                            <span class="material-symbols-outlined text-white/40">chevron_right</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-purple-400">smartphone</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">Mobile App Design</h3>
+                                <p class="text-white/40 text-xs">Cập nhật 5 giờ trước</p>
+                            </div>
+                            <span class="material-symbols-outlined text-white/40">chevron_right</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-cyan-400">cloud</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">Cloud Infrastructure</h3>
+                                <p class="text-white/40 text-xs">Cập nhật 1 ngày trước</p>
+                            </div>
+                            <span class="material-symbols-outlined text-white/40">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Blog Posts -->
+                <div class="bg-[#191933] rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-white text-lg font-bold">Bài Blog Gần Đây</h2>
+                        <button class="text-primary hover:text-primary/80 text-sm font-semibold">Xem tất cả</button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-green-400">article</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">React Performance Tips</h3>
+                                <p class="text-white/40 text-xs">Xuất bản 3 ngày trước</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">Published</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-orange-400">edit</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">Docker Best Practices</h3>
+                                <p class="text-white/40 text-xs">Nháp - 1 tuần trước</p>
+                            </div>
+                            <span class="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded-full">Draft</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                            <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-pink-400">schedule</span>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-white font-semibold text-sm">AI Integration Guide</h3>
+                                <p class="text-white/40 text-xs">Lên lịch - 2 ngày nữa</p>
+                            </div>
+                            <span class="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded-full">Scheduled</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="mt-6 bg-[#191933] rounded-xl p-6">
+                <h2 class="text-white text-lg font-bold mb-4">Thông Tin Hệ Thống</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-green-400">check_circle</span>
+                        <div>
+                            <p class="text-white/40 text-xs">Trạng thái</p>
+                            <p class="text-white font-semibold">Hoạt động tốt</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-cyan-400">update</span>
+                        <div>
+                            <p class="text-white/40 text-xs">Cập nhật lần cuối</p>
+                            <p class="text-white font-semibold">15/12/2024</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-purple-400">storage</span>
+                        <div>
+                            <p class="text-white/40 text-xs">Dung lượng</p>
+                            <p class="text-white font-semibold">2.4 GB / 10 GB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('adminToken');
+            const email = localStorage.getItem('adminEmail');
+            
+            if (!token || email !== 'binh.vd01500@sinhvien.hoasen.edu.vn') {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            document.getElementById('admin-email').textContent = email;
+            return true;
+        }
+
+        // Generate stars
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminEmail');
+                window.location.href = 'admin-login.html';
+            }
+        });
+
+        // Initialize
+        if (checkAuth()) {
+            createStars();
+        }
+    </script>
+</body>
+</html>
