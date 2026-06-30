@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "portfolio-vo-duy-binh",
   "builds": [
     {
       "src": "server.js",
@@ -13,20 +12,8 @@
       "dest": "/server.js"
     },
     {
-      "src": "/uploads/(.*)",
+      "src": "/(.*)",
       "dest": "/server.js"
-    },
-    {
-      "src": "/(.*\\.html)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/js/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
     }
   ]
 }
